@@ -15,6 +15,7 @@ export const GET_PINS_QUERY = `
     _id
     createdAt
     title
+    content
     image
     latitude
     longitude
