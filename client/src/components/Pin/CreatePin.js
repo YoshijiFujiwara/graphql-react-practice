@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useContext } from "react";
+import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -8,7 +9,39 @@ import LandscapeIcon from "@material-ui/icons/LandscapeOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import SaveIcon from "@material-ui/icons/SaveTwoTone";
 
+import Context from "../../context";
+
 const CreatePin = ({ classes }) => {
+  const { dispatch } = useContext(Context);
+  const [title, setTitle] = useState("");
+  const [image, setImage] = useState("");
+  const [content, setContent] = useState("");
+
+  const handleImageUpload = async () => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "geopins");
+    data.append("cloud_name", "db32y726v");
+    const res = await axios.post(
+      "https://api.cloudinary.com/v1_1/db32y726v/image/upload",
+      data
+    );
+    return res.data.url;
+  };
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+    const url = await handleImageUpload();
+    console.log(url);
+  };
+
+  const handleDeleteDraft = () => {
+    setTitle("");
+    setImage("");
+    setContent("");
+    dispatch({ type: "DELETE_DRAFT" });
+  };
+
   return (
     <form className={classes.form}>
       <Typography
@@ -20,15 +53,26 @@ const CreatePin = ({ classes }) => {
         <LandscapeIcon className={classes.iconLarge} /> Pin Location
       </Typography>
       <div>
-        <TextField name="title" label="Title" placeholder="Insert pin title" />
+        <TextField
+          name="title"
+          label="Title"
+          placeholder="Insert pin title"
+          onChange={e => setTitle(e.target.value)}
+        />
         <input
           accept="image/*"
           id="image"
           type="file"
           className={classes.input}
+          onChange={e => setImage(e.target.files[0])}
         />
         <label htmlFor="image">
-          <Button component="span" size="small" className={classes.button}>
+          <Button
+            style={{ color: image && "green" }}
+            component="span"
+            size="small"
+            className={classes.button}
+          >
             <AddAPhotoIcon />
           </Button>
         </label>
@@ -42,10 +86,16 @@ const CreatePin = ({ classes }) => {
           margin="normal"
           fullWidth
           variant="outlined"
+          onChange={e => setContent(e.target.value)}
         />
       </div>
       <div>
-        <Button className={classes.button} variant="contained" color="primary">
+        <Button
+          onClick={handleDeleteDraft}
+          className={classes.button}
+          variant="contained"
+          color="primary"
+        >
           <ClearIcon className={classes.leftIcon} />
           Discard
         </Button>
@@ -53,10 +103,12 @@ const CreatePin = ({ classes }) => {
           type="submit"
           className={classes.button}
           variant="contained"
-          color="primary"
+          color="secondary"
+          disabled={!title.trim() || !content.trim() || !image}
+          onClick={handleSubmit}
         >
           Submit
-          <ClearIcon className={classes.rightIcon} />
+          <SaveIcon className={classes.rightIcon} />
         </Button>
       </div>
     </form>
