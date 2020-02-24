@@ -45,8 +45,9 @@ const CreatePin = ({ classes }) => {
         CREATE_PIN_MUTATION,
         variables
       );
-      console.log({ createPin });
-      dispatch({ type: "CREATE_PIN", payload: createPin });
+      // subscriptionによって不要になった
+      // console.log({ createPin });
+      // dispatch({ type: "CREATE_PIN", payload: createPin });
       handleDeleteDraft();
     } catch (err) {
       setSubmitting(false);
@@ -63,12 +64,7 @@ const CreatePin = ({ classes }) => {
 
   return (
     <form className={classes.form}>
-      <Typography
-        className={classes.alignCenter}
-        component="h2"
-        variant="h4"
-        color="secondary"
-      >
+      <Typography className={classes.alignCenter} component="h2" variant="h4">
         <LandscapeIcon className={classes.iconLarge} /> Pin Location
       </Typography>
       <div>

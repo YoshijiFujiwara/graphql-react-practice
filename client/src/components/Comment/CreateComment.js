@@ -21,7 +21,8 @@ const CreateComment = ({ classes }) => {
       CREATE_COMMENT_MUTATION,
       variables
     );
-    dispatch({ type: "CREATE_COMMENT", payload: createComment });
+    // subscriptionによって不要に
+    // dispatch({ type: "CREATE_COMMENT", payload: createComment });
     setComment("");
   };
 
