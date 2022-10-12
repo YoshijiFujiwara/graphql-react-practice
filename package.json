@@ -8,7 +8,7 @@
     "dev": "nodemon --ignore client/ server.js"
   },
   "dependencies": {
-    "apollo-server": "^2.10.1",
+    "apollo-server": "^2.25.4",
     "dotenv": "^8.2.0",
     "google-auth-library": "^5.10.0",
     "graphql": "^14.6.0",
